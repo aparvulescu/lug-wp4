@@ -1,5 +1,6 @@
 from fourpointfour import holes
 from fourpointeight import Flst
+from main_e import metals,aFty
 import math
 
 
@@ -8,11 +9,14 @@ SigmaYield =
 
 Taulst = []
 for i in holes:
-    Dfi = 0.95 * 2 * holes[holes.index(i)][0]
+    Dfi = 2 * holes[holes.index(i)][0]
+    Dfo = 1.20 * 2 * holes[holes.index(i)][0]
     Fi = Flst[holes.index(i)]
-    Tau = Fi / (math.pi * Dfi * (t2 + 2.5e-3))
+    Tau = Fi/((4*math.pi) * (Dfo**2 - Dfi**2))
     if Tau > SigmaYield:
         print('failure!')
     Taulst.append(Tau)
 
 print(Taulst)
+
+

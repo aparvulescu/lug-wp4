@@ -4,7 +4,8 @@ from main import cte
 def ThermalCheck(geometry, holes, t, youngsm, yieldvalues, d2): 
     youngsbackplate = youngsm[geometry[3]]
     Eb = youngsm[geometry[5]] 
-    
+    t2 = geometry[7]
+
     Dlst = []
     Frlst = []
     for i in holes:
@@ -31,22 +32,22 @@ def ThermalCheck(geometry, holes, t, youngsm, yieldvalues, d2):
     w = geometry[0] 
     D1 = geometry[1]
     t1 = geometry[2]
-    t2 = geometry[7]
+    
     l = geometry[9]
 
     Aabs = t2 * w + y * w + 0.5 * math.pi *(w/2)**2 - math.pi * (D1/2)**2
-    Aemit = 2* Aabs + 2* (w * t2 + 2*(t1*(y+((D1/2)+(w-D1)/2))) + l * w
+    Aemit = 2* Aabs + 2* (w * t2 + 2*(t1*(y+((D1/2)+(w-D1)/2)))) + l * w
 
-    Tmax = float((((1665.0 * absorbtivity + 179.0 * emissivity) * Aabs)/((5.67e-8) * emissivity * Aemit))**(1/4))
-    Tmin = ((179 * Aabs) / ((5.67e-8) * Aemit))**(1/4)
+    Tmax = (((1665.0 * absorbtivity + 179.0 * emissivity) * Aabs)/((5.67e-8) * emissivity * Aemit))**(1/4)
+    # Tmin = ((179 * Aabs) / ((5.67e-8) * Aemit))**(1/4)
 
     DeltaTmax = Tmax - 288.15
-    DeltaTmin = Tmin - 288.15
+    # DeltaTmin = Tmin - 288.15
 
     Dfi = d2
     
     FdeltaTmax = (alphac - alphab) * DeltaTmax * Eb * (math.pi*(Dfi/2)**2) * (1-MaxFratio)
-    FdeltaTmin = (alphac - alphab) * DeltaTmin * Eb * (math.pi*(Dfi/2)**2) * (1-MaxFratio)
+    # FdeltaTmin = (alphac - alphab) * DeltaTmin * Eb * (math.pi*(Dfi/2)**2) * (1-MaxFratio)
 
     Asum = 0
     Axsum = 0
@@ -65,7 +66,10 @@ def ThermalCheck(geometry, holes, t, youngsm, yieldvalues, d2):
         Asum = Asum + (math.pi) * (holes[holes.index(i)][0])**2
         Axsum = Axsum + ((math.pi) * (holes[holes.index(i)][0])**2) * (holes[holes.index(i)][1])
         Azsum = Azsum + ((math.pi) * (holes[holes.index(i)][0])**2) * (holes[holes.index(i)][2])
-
+    xcg = Axsum / Asum
+    zcg = Azsum / Asum
+    M_cg_y = Fz * xcg - Fx * zcg
+    for i in holes:
         Finplanemysublst = []
         Ax = ((math.pi) * (holes[holes.index(i)][0])**2) * (holes[holes.index(i)][1] - xcg)
         Az = ((math.pi) * (holes[holes.index(i)][0])**2) * (holes[holes.index(i)][2] - zcg)
@@ -76,10 +80,8 @@ def ThermalCheck(geometry, holes, t, youngsm, yieldvalues, d2):
         Finplanemysublst.append(Finplane_my_x)
         Finplanemysublst.append(Finplane_my_z)
         Finplanemylst.append(Finplanemysublst)
-    xcg = Axsum / Asum
-    zcg = Azsum / Asum
+    
     nf = len(holes)
-    M_cg_y = Fz * xcg - Fx * zcg
     F_in_plane_x = Fx / nf
     F_in_plane_z = Fz / nf
 

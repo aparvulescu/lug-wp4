@@ -39,8 +39,8 @@ def BearingCheck(holes,geometry,yieldvalues):
 
     Pilst = []
     for i in Finplanemylst:
-        Fnetx = F_in_plane_x + Finplanemylst[Finplanemylst.index(i)][1]
-        Fnetz = F_in_plane_z + Finplanemylst[Finplanemylst.index(i)][2]
+        Fnetx = F_in_plane_x + i[0]
+        Fnetz = F_in_plane_z + i[1]
         Pi = math.sqrt((Fnetx**2) + (Fnetz**2))
         Pilst.append(Pi)
     
@@ -91,8 +91,8 @@ def BearingCheckWall(holes,geometry,yieldvalues):
     
     Pilst = []
     for i in Finplanemylst:
-        Fnetx = F_in_plane_x + Finplanemylst[Finplanemylst.index(i)][1]
-        Fnetz = F_in_plane_z + Finplanemylst[Finplanemylst.index(i)][2]
+        Fnetx = F_in_plane_x + i[0]
+        Fnetz = F_in_plane_z + i[1]
         Pi = math.sqrt((Fnetx**2) + (Fnetz**2))
         Pilst.append(Pi)
     

@@ -197,40 +197,42 @@ from Holes import HolePattern
 from masscalc import masscalculator
 from Bending import Bending
 
-holes,d2 = HolePattern(solutions_43,aFty)
-
+MSavgLst = []
 MSTotalLst = [] #order: [lug, backplate bearing, s/c wall bearing, backplate pullthrough, s/c pull through, backplate thermal, s/c thermal, average]
 for i in range(len(solutions_43)):
     MSLst = []
-    MSavgLst = []
+    
+    holes,d2 = HolePattern(solutions_43[i], aFty)
 
     MSLst.append(solutions_43[i][4])
     
-    y = Bending(solutions_43[i],aFty)
+    y = Bending(solutions_43[i], aFty)
     solutions_43[i].append(y)
 
-    t2 = BearingCheck(holes,solutions_43[i],aFty)
+    t2 = BearingCheck(holes, solutions_43[i], aFty)
     solutions_43[i].append(t2)
    
-    m_tot,l = masscalculator(solutions_43[i],density,holes,d2)
+    m_tot,l = masscalculator(solutions_43[i], density,holes,d2)
     solutions_43[i].append(m_tot)
     solutions_43[i].append(l)
 
     MSLst.append(0)
 
-    MSbearingwall = BearingCheckWall(holes,solutions_43[i],aFty)
+    MSbearingwall = BearingCheckWall(holes, solutions_43[i], aFty)
     MSLst.append(MSbearingwall)
 
-    MSpullthrough = PullThroughCheck(holes,solutions_43[i],aFty, solutions_43[i][7])
+    MSpullthrough = PullThroughCheck(holes, solutions_43[i], aFty, solutions_43[i][7])
     MSLst.append(MSpullthrough) 
-    MSpullthrough = PullThroughCheck(holes,solutions_43[i],aFty, 2.5e-3)
+    MSpullthrough = PullThroughCheck(holes, solutions_43[i], aFty, 2.5e-3)
     MSLst.append(MSpullthrough) 
 
-    MSthermalbackplate1 = ThermalCheck(solutions_43[i], holes, solutions_43[i][5], youngsm, aFty, d2)
+    MSthermalbackplate1 = ThermalCheck(solutions_43[i], holes, solutions_43[i][7], youngsm, aFty, d2, cte)
     MSLst.append(MSthermalbackplate1)
 
-    MSthermalbackplate2 = ThermalCheck(solutions_43[i], holes, 2.5e-3, youngsm, aFty, d2)
+    MSthermalbackplate2 = ThermalCheck(solutions_43[i], holes, 2.5e-3, youngsm, aFty, d2, cte)
     MSLst.append(MSthermalbackplate2)
+
+    # print(f"MSLst = {MSLst}")
 
     if any(t < 0 for t in MSLst):
         continue
@@ -240,3 +242,7 @@ for i in range(len(solutions_43)):
 for i in MSTotalLst:
     MSavg = sum(MSTotalLst[i]) / len(MSTotalLst[i])
     MSavgLst.append(MSavg)
+
+# print(f"MSavgLst = {MSavgLst}")
+print(holes)
+

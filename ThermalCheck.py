@@ -1,7 +1,6 @@
 import math
-from main import cte
 
-def ThermalCheck(geometry, holes, t, youngsm, yieldvalues, d2): 
+def ThermalCheck(geometry, holes, t, youngsm, yieldvalues, d2, cte): 
     youngsbackplate = youngsm[geometry[3]]
     Eb = youngsm[geometry[5]] 
     t2 = geometry[7]
@@ -87,8 +86,8 @@ def ThermalCheck(geometry, holes, t, youngsm, yieldvalues, d2):
 
     Pilst = []
     for i in Finplanemylst:
-        Fnetx = F_in_plane_x + Finplanemylst[Finplanemylst.index(i)][1]
-        Fnetz = F_in_plane_z + Finplanemylst[Finplanemylst.index(i)][2]
+        Fnetx = F_in_plane_x + Finplanemylst[Finplanemylst.index(i)][0]
+        Fnetz = F_in_plane_z + Finplanemylst[Finplanemylst.index(i)][1]
         Pi = math.sqrt((Fnetx**2) + (Fnetz**2))
         Pilst.append(Pi)
     

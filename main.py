@@ -199,6 +199,7 @@ from Bending import Bending
 
 MSavgLst = []
 MSTotalLst = [] #order: [lug, backplate bearing, s/c wall bearing, backplate pullthrough, s/c pull through, backplate thermal, s/c thermal, average]
+NewSolLst = []
 for i in range(len(solutions_43)):
     MSLst = []
     
@@ -218,7 +219,7 @@ for i in range(len(solutions_43)):
 
     MSLst.append(0)
 
-    MSbearingwall = BearingCheckWall(holes, solutions_43[i], aFty)
+    MSbearingwall = BearingCheckWall(holes, solutions_43[i], aFty, 2.5e-3)
     MSLst.append(MSbearingwall)
 
     MSpullthrough = PullThroughCheck(holes, solutions_43[i], aFty, solutions_43[i][7])
@@ -232,17 +233,26 @@ for i in range(len(solutions_43)):
     MSthermalbackplate2 = ThermalCheck(solutions_43[i], holes, 2.5e-3, youngsm, aFty, d2, cte)
     MSLst.append(MSthermalbackplate2)
 
-    # print(f"MSLst = {MSLst}")
-
     if any(t < 0 for t in MSLst):
         continue
     else:
         MSTotalLst.append(MSLst)
+        NewSolLst.append(solutions_43[i])
 
 for i in MSTotalLst:
-    MSavg = sum(MSTotalLst[i]) / len(MSTotalLst[i])
-    MSavgLst.append(MSavg)
+    MSavg = sum(i) / len(i)
+    MSavgLst.append(round(MSavg, 3))
 
-# print(f"MSavgLst = {MSavgLst}")
-print(holes)
+# print(f"MSTotalLst = {MSTotalLst}")
+for i in MSTotalLst:
+    print(f"MS = {i}")
+
+print(f"MSavgLst = {MSavgLst}")
+
+for i in range(len(NewSolLst)):
+    print(f"Mtot = {round(NewSolLst[i][8], 3)}")
+
+print(solutions_43)
+
+
 

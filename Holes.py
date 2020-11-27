@@ -7,17 +7,8 @@ def HolePattern(solutions,yieldvalues):
     t1 = solutions[2] 
     tau_max = yieldvalues[solutions[3]]
 
-    for n in range(2, 20, 2):
-        tau_fast = 0
-        d2 = 0.1
-        while tau_fast < tau_max:
-            d2 -= 0.001
-            fs = v / n
-            tau_fast = fs / (np.pi * (d2/2)**2)
-        boltconfig.append([n, d2 + 0.002]) # find different configurations
-
-    d2 = boltconfig[1][1]
-    n = boltconfig[1][0]
+    d2 = 0.005
+    n = 2
     # note: we chose the configuration with 4 bolts because it provides more redundancy than 2, 
     # and more than 4 would cause diameter to be very small. The configuration can be changed later
     x = []

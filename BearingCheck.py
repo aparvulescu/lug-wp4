@@ -51,7 +51,7 @@ def BearingCheck(holes,geometry,yieldvalues):
 
     return max(tlst)
 
-def BearingCheckWall(holes,geometry,yieldvalues):
+def BearingCheckWall(holes,geometry,yieldvalues, t):
     Asum = 0
     Axsum = 0
     Azsum = 0
@@ -98,7 +98,7 @@ def BearingCheckWall(holes,geometry,yieldvalues):
     
     sigmalist = []
     for i in Pilst:
-        sigma = Pilst[Pilst.index(i)] / (2 * 2.5 * 10e-3 * holes[Pilst.index(i)][0])
+        sigma = Pilst[Pilst.index(i)] / (2 * t * holes[Pilst.index(i)][0])
         sigmalist.append(sigma)
     
     MSlist = []

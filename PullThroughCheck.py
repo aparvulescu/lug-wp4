@@ -1,6 +1,6 @@
 import math
 
-def PullThroughCheck(holes,geometry,yieldvalues):
+def PullThroughCheck(holes,geometry,yieldvalues,t):
     Asum = 0
     Azsum = 0
     Az2sum = 0
@@ -29,8 +29,11 @@ def PullThroughCheck(holes,geometry,yieldvalues):
         Dfi = 2 * holes[holes.index(i)][0]
         Dfo = 1.20 * 2 * holes[holes.index(i)][0]
         Fi = Flst[holes.index(i)]
-        Tau = Fi/((4*math.pi) * (Dfo**2 - Dfi**2))
-        MS = ( SigmaYield / Tau ) - 1
+        sigma = Fi/((4*math.pi) * (Dfo**2 - Dfi**2))
+        tau = Fi / (t * math.pi * Dfi) 
+        stresses = [sigma, tau]
+
+        MS = ( SigmaYield / max(stresses) ) - 1
         MSlst.append(MS)
 
     return min(MSlst)

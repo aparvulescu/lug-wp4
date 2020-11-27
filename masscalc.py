@@ -1,16 +1,16 @@
 import numpy as np
 
-def masscalculator(solutions,rhofastener,rhobackplate,holes,d2):
+def masscalculator(solutions,densities,holes,d2):
 # backplate
     h = 0.0131 # calculated in 3.1
     t1 = solutions[2]
-    t2 = solutions[6]
+    t2 = solutions[7]
     w = solutions[0]
     D1 = solutions[1]
-    t4 = (w - D)/2
-    y = solutions[5]
-    rho_fast = 
-    rho_backplate = 
+    y = solutions[6]
+    rho_fast = densities[solutions[5]]
+    rho_backplate = densities[solutions[3]]
+    n = len(holes)
 
     vol_fast = 0.25 * np.pi * d2**2 * t2 * n
 
@@ -26,4 +26,4 @@ def masscalculator(solutions,rhofastener,rhobackplate,holes,d2):
 
     m_tot = (vol_fast * rho_fast) + (vol_tot * rho_backplate)
 
-    return m_tot
+    return m_tot,l

@@ -1,13 +1,10 @@
 import math
-from fourpointfour import holes
-from main import solutions_43,youngsm
+from main import cte
 
-
-def ThermalCheck(geometry,holes,t):
-    Eb = 
-    youngsbackplate = youngsm[geometry[3]] 
+def ThermalCheck(geometry, holes, t, youngsm, yieldvalues, d2): 
+    youngsbackplate = youngsm[geometry[3]]
+    Eb = youngsm[geometry[5]] 
     
-
     Dlst = []
     Frlst = []
     for i in holes:
@@ -26,30 +23,28 @@ def ThermalCheck(geometry,holes,t):
     absorbtivity = 0.525
     emissivity = 0.09
 
-    alphac = #thermal coefficient hinge
-    alphab = #thermal coefficient bolt
+    alphac = cte[geometry[3]]#thermal coefficient hinge
+    alphab = cte[geometry[5]]#thermal coefficient bolt
     
+   #backplate length
+    y = geometry[6]
+    w = geometry[0] 
+    D1 = geometry[1]
+    t1 = geometry[2]
+    t2 = geometry[7]
+    l = geometry[9]
 
-    C =    #backplate width
-    B =    #backplate length
-    y = 
-    w = 
-    D1 = 
+    Aabs = t2 * w + y * w + 0.5 * math.pi *(w/2)**2 - math.pi * (D1/2)**2
+    Aemit = 2* Aabs + 2* (w * t2 + 2*(t1*(y+((D1/2)+(w-D1)/2))) + l * w
 
-    Aabs = t2 * c + y * w + 0.5 * math.pi *(w/2)**2 - math.pi * (D1/2)**2
-    Aemit = 2* Aabs + 2* (B * t2 + 2*(t1*(y+((D1/2)+(w-D1)/2))) + B * C
-
-
-    Tmax = (((1665*absorbtivity + 179 * emissivity)*Aabs)/((5.67e-8)*emissivity*Aemit))**(1/4)
-    Tmin = ((179*Aabs)/((5.67e-8)*Aemit))**(1/4)
-
+    Tmax = float((((1665.0 * absorbtivity + 179.0 * emissivity) * Aabs)/((5.67e-8) * emissivity * Aemit))**(1/4))
+    Tmin = ((179 * Aabs) / ((5.67e-8) * Aemit))**(1/4)
 
     DeltaTmax = Tmax - 288.15
     DeltaTmin = Tmin - 288.15
 
-    Dfi = holes[0[0]]
+    Dfi = d2
     
-
     FdeltaTmax = (alphac - alphab) * DeltaTmax * Eb * (math.pi*(Dfi/2)**2) * (1-MaxFratio)
     FdeltaTmin = (alphac - alphab) * DeltaTmin * Eb * (math.pi*(Dfi/2)**2) * (1-MaxFratio)
 
@@ -64,7 +59,7 @@ def ThermalCheck(geometry,holes,t):
     Az2sum = 0
 
     Finplanemylst = []
-    sigma = material_bearing_strength
+    YieldStrength = yieldvalues[geometry[3]]
 
     for i in holes:
         Asum = Asum + (math.pi) * (holes[holes.index(i)][0])**2
@@ -102,7 +97,7 @@ def ThermalCheck(geometry,holes,t):
     
     MSlist = []
     for i in sigmalist:
-        MS = (sigmalist[sigmalist.index(i)] / material_bearing_strength) - 1
+        MS = (sigmalist[sigmalist.index(i)] / YieldStrength) - 1
         MSlist.append(MS)
 
     return min(MSlist)

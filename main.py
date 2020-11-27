@@ -53,6 +53,7 @@ aFty = [365e6, 462e6, 275e6, 138e6, 360e6, 372.5e6]  # Pa
 aFtu = [415e6, 538e6, 425e6, 207e6, 560e6, 562.5e6]  # Pa
 youngsm = [72.4e9, 71.7e9, 73.1e9, 72.4e9, 200e9, 200e9]  # Pa
 density = [2800, 2810, 2780, 2680, 7850, 7850]  # kg/m^3
+cte = [23e-6, 23.6e-6, 23.2e-6, 21.4e-6, 12e-6, 11.25e-6]  # K^(-1)
 
 Pa = 3911.73  # N
 Ptr = 713.7  # N
@@ -181,8 +182,10 @@ for w in np.arange(10e-3, 80e-3, 1e-3):  # m
                         # print(f"Found the best dimensions option {opt}!")
                         # print(f"w = {w:.4f}, D = {D:.4f}, t = {t:.4f}, e = {e:.4f}, metal = {metals[im]}, curve_d1.12 = {curveKt}, check = {check:.4f}")
                         SM = 1 / (check ** 0.625) - 1  # safety margin
-                        solution = [w, D, t, im, SM]  # im = index of material
-                        solutions_43.append(solution)
+                        for fm in range(len(metals)):
+                            if fm != im:
+                                solution = [w, D, t, im, SM, fm]  # im = index of lug material
+                                solutions_43.append(solution)
 
 # print(solutions_43)
 
@@ -191,44 +194,49 @@ from BearingCheck import BearingCheck,BearingCheckWall
 from PullThroughCheck import PullThroughCheck
 from ThermalCheck import ThermalCheck
 from Holes import HolePattern
-from masscalc import 
+from masscalc import masscalculator
+from Bending import Bending
 
 holes,d2 = HolePattern(solutions_43,aFty)
 
 MSTotalLst = [] #order: [lug, backplate bearing, s/c wall bearing, backplate pullthrough, s/c pull through, backplate thermal, s/c thermal, average]
 for i in range(len(solutions_43)):
     MSLst = []
+    MSavgLst = []
 
     MSLst.append(solutions_43[i][4])
     
-    y = Bending(solutions_43[i])
-    solutions_43.append(y)
+    y = Bending(solutions_43[i],aFty)
+    solutions_43[i].append(y)
 
     t2 = BearingCheck(holes,solutions_43[i],aFty)
-    solutions_43.append(t2)
+    solutions_43[i].append(t2)
    
+    m_tot,l = masscalculator(solutions_43[i],density,holes,d2)
+    solutions_43[i].append(m_tot)
+    solutions_43[i].append(l)
+
     MSLst.append(0)
 
     MSbearingwall = BearingCheckWall(holes,solutions_43[i],aFty)
     MSLst.append(MSbearingwall)
 
-    #MSpullthrough = PullThroughCheck(holes,solutions_43[i],aFty)
-    #MSLst.append(MSpulltrough) FOR BACK PLATE THICKNESS
+    MSpullthrough = PullThroughCheck(holes,solutions_43[i],aFty, solutions_43[i][7])
+    MSLst.append(MSpullthrough) 
+    MSpullthrough = PullThroughCheck(holes,solutions_43[i],aFty, 2.5e-3)
+    MSLst.append(MSpullthrough) 
 
-    #MSpullthrough = PullThroughCheck(holes,solutions_43[i],aFty)
-    #MSLst.append(MSpulltrough) FOR S/C WALL THICKNESS
+    MSthermalbackplate1 = ThermalCheck(solutions_43[i], holes, solutions_43[i][5], youngsm, aFty, d2)
+    MSLst.append(MSthermalbackplate1)
 
-    MSthermalbackplate = ThermalCheck(solutions_43[i], holes, solutions_43[i][5])
-    MSLst.append(MSthermalbackplate)
+    MSthermalbackplate2 = ThermalCheck(solutions_43[i], holes, 2.5e-3, youngsm, aFty, d2)
+    MSLst.append(MSthermalbackplate2)
 
-    MSthermalbackplate = ThermalCheck(solutions_43[i], holes, 2.5e-3)
-    MSLst.append(MSthermalbackplate)
-
-    MSavg = sum(MSLst) / len(MSLst)
-    MSLst.append(MSavg)
-
-    if MSLst[0] < 0 or MSLst[1] < 0 or MSLst[2] < 0 or MSLst[3] < 0 or MSLst[4] < 0 or MSLst[5] < 0 or MSLst[6] < 0 or MSLst[7] < 0:
+    if any(t < 0 for t in MSLst):
         continue
     else:
         MSTotalLst.append(MSLst)
 
+for i in MSTotalLst:
+    MSavg = sum(MSTotalLst[i]) / len(MSTotalLst[i])
+    MSavgLst.append(MSavg)

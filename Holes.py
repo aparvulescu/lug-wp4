@@ -1,8 +1,7 @@
-from main import solutions_43,aFty
 import numpy as np
 
 def HolePattern(solutions,yieldvalues):
-    v = 3120.43
+    v = 3653.76
     holelst = []
     boltconfig = []
     for i in solutions:  
@@ -11,19 +10,18 @@ def HolePattern(solutions,yieldvalues):
         tau_max = yieldvalues[i[3]]
 
         for n in range(2, 20, 2):
-            tau_avg = 0
-            d2 = 0.5
-            while tau_avg < tau_max:
-                d2 -=0.001
+            tau_fast = 0
+            d2 = 0.1
+            while tau_fast < tau_max:
+                d2 -= 0.001
                 fs = v / n
-                tau_avg = fs / (np.pi * (d2/2)**2)
-            boltconfig.append([n, d2])
-                
+                tau_fast = fs / (np.pi * (d2/2)**2)
+            boltconfig.append([n, d2 + 0.002]) # find different configurations
 
-        n = n + 1
-        if n % 2 != 0:
-            n = n + 1
-
+        d2 = boltconfig[1][1]
+        n = boltconfig[1][0]
+        # note: we chose the configuration with 4 bolts because it provides more redundancy than 2, 
+        # and more than 4 would cause diameter to be very small. The configuration can be changed later
         x = []
         f_top = 0
         f_bottom = 0
@@ -51,29 +49,4 @@ def HolePattern(solutions,yieldvalues):
             holespre.append([r[i], x[i], z[i]])
         holelst.append(holespre)
 
-    return holes
-        r = n * [(d2/2)]
-
-        holespre = []
-        for i in range(n):
-            holespre.append([r[i], x[i], z[i]])
-        holelst.append(holespre)
-
-    return holes
-            holespre.append([r[i], x[i], z[i]])
-        holelst.append(holespre)
-
-    return holes
-            holespre.append([r[i], x[i], z[i]])
-        holelst.append(holespre)
-
-    return holes
-            holespre.append([r[i], x[i], z[i]])
-        holelst.append(holespre)
-
-    return holes
-            holespre.append([r[i], x[i], z[i]])
-        holelst.append(holespre)
-
-    return holes
-
+    return holes,d2

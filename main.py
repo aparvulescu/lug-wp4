@@ -252,7 +252,7 @@ print(f"MSavgLst = {MSavgLst}")
 for i in range(len(NewSolLst)):
     print(f"Mtot = {round(NewSolLst[i][8], 3)}")
 
-print(solutions_43)
+# print(solutions_43)
 
 
 

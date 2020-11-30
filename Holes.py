@@ -15,23 +15,31 @@ def HolePattern(solutions,yieldvalues):
     f_top = 0
     f_bottom = 0
 
-    for i in range(int(n/2)):
-        for a in range(2):
-            if i % 2 ==0:
-                x.append(d2 + (f_top * 2 * d2))
-                f_top += 1
-            else:
-                x.append(-d2 - (f_bottom * 2 * d2))
-                f_bottom +=1
+    # for i in range(int(n/2)):
+    #    for a in range(2):
+    #        if i % 2 ==0:
+    #            x.append(d2 + (f_top * 2 * d2))
+    #            f_top += 1
+    #        else:
+    #           x.append(-d2 - (f_bottom * 2 * d2))
+    #           f_bottom +=1
+    x.append(0)
+    x.append(0)
 
-    length = h + (2*t1) + (4 * d2)
+    # length = h + (2*t1) + (4 * d2)
     z = []
-    for i in range(n):
-        if i % 2 ==0:
-            z.append((length/2) - 1.5*d2)
-        else:
-            z.append(-(length/2) + 1.5*d2)
-    r = n * [(d2/2)]
+    #for i in range(n):
+    #    if i % 2 ==0:
+    #        z.append((length/2) - 1.5*d2)
+    #    else:
+    #        z.append(-(length/2) + 1.5*d2)
+
+    z.append(h/2 + t1 + 1.5 * d2)
+    z.append(-(h/2 + t1 + 1.5 * d2))
+
+    length = h + 2 * t1 + 6 * d2
+
+    r = [d2/2, d2/2]
 
     holes = []
     for i in range(n):

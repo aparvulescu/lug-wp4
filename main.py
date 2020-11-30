@@ -245,7 +245,7 @@ for i in MSTotalLst:
 
 for i in range(len(NewSolLst)):
     if NewSolLst[i][6] >= 0.001 and MSavgLst[i] <= 0.2:
-        print(f"Mtot = {round(NewSolLst[i][8], 3)}, MSavg = {round(MSavgLst[i], 3)}, Material = {metals[NewSolLst[i][3]]}, w = {NewSolLst[i][0]:.3f}, D1 = {NewSolLst[i][1]:.4f}, t1 = {NewSolLst[i][2]:.4f}, t2 = {NewSolLst[i][7]:.4f}, l = {NewSolLst[i][9]:.3f}, y = {NewSolLst[i][6]:.3f}, Fastener Material = {metals[NewSolLst[i][5]]}")
+        print(f"Mtot = {round(NewSolLst[i][8], 3)}, MSavg = {round(MSavgLst[i], 3)}, Material = {metals[NewSolLst[i][3]]}, w = {NewSolLst[i][0]:.3f}, D1 = {NewSolLst[i][1]:.4f}, t1 = {NewSolLst[i][2]:.4f}, t2 = {NewSolLst[i][7]:.4f}, l = {NewSolLst[i][9]:.4f}, y = {NewSolLst[i][6]:.3f}, Fastener Material = {metals[NewSolLst[i][5]]}")
         print(f"List of MS's = {MSTotalLst[i]}")
 # print(solutions_43)
 

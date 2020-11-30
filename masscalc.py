@@ -14,7 +14,7 @@ def masscalculator(solutions,densities,holes,d2):
 
     vol_fast = 0.25 * np.pi * d2**2 * t2 * n
 
-    l = (4 * d2) + (2 * t1) + h
+    l = (6 * d2) + (2 * t1) + h
     vol_backplate = l * w * t2 - vol_fast
 
     # lugs

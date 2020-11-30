@@ -18,7 +18,7 @@ def masscalculator(solutions,densities,holes,d2):
     vol_backplate = l * w * t2 - vol_fast
 
     # lugs
-    vol_sqpart = (y - (0.5* w)) * w * t1
+    vol_sqpart = (y + (0.5* D1)) * w * t1
     vol_circpart = (0.5 * np.pi * (0.5 * w)**2) * t1
     vol_lugtotal = 2 * (vol_sqpart + vol_circpart - (np.pi * (0.5 * D1)**2 * t1))
 

@@ -233,7 +233,7 @@ for i in range(len(solutions_43)):
     MSthermalbackplate2 = ThermalCheck(solutions_43[i], holes, 2.5e-3, youngsm, aFty, d2, cte)
     MSLst.append(MSthermalbackplate2)
 
-    if any(t < 0 for t in MSLst):
+    if any(t < 0 for t in MSLst) or solutions_43[i][6] < 0:
         continue
     else:
         MSTotalLst.append(MSLst)
@@ -243,15 +243,10 @@ for i in MSTotalLst:
     MSavg = sum(i) / len(i)
     MSavgLst.append(round(MSavg, 3))
 
-# print(f"MSTotalLst = {MSTotalLst}")
-for i in MSTotalLst:
-    print(f"MS = {i}")
-
-print(f"MSavgLst = {MSavgLst}")
-
 for i in range(len(NewSolLst)):
-    print(f"Mtot = {round(NewSolLst[i][8], 3)}")
-
+    if NewSolLst[i][6] >= 0.001 and MSavgLst[i] <= 0.2:
+        print(f"Mtot = {round(NewSolLst[i][8], 3)}, MSavg = {round(MSavgLst[i], 3)}, Material = {metals[NewSolLst[i][3]]}, w = {NewSolLst[i][0]:.3f}, D1 = {NewSolLst[i][1]:.4f}, t1 = {NewSolLst[i][2]:.4f}, t2 = {NewSolLst[i][7]:.4f}, l = {NewSolLst[i][9]:.3f}, y = {NewSolLst[i][6]:.3f}, Fastener Material = {metals[NewSolLst[i][5]]}")
+        print(f"List of MS's = {MSTotalLst[i]}")
 # print(solutions_43)
 
 

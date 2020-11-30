@@ -34,11 +34,12 @@ def ThermalCheck(geometry, holes, t, youngsm, yieldvalues, d2, cte):
     
     l = geometry[9]
 
-    Aabs = t2 * w + y * w + 0.5 * math.pi *(w/2)**2 - math.pi * (D1/2)**2
+    Aabs = t2 * w + (y + (D1/2)) * w + 0.5 * math.pi *(w/2)**2 - math.pi * (D1/2)**2
     Aemit = 2* Aabs + 2* (w * t2 + 2*(t1*(y+((D1/2)+(w-D1)/2)))) + l * w
 
     Tmax = (((1665.0 * absorbtivity + 179.0 * emissivity) * Aabs)/((5.67e-8) * emissivity * Aemit))**(1/4)
     # Tmin = ((179 * Aabs) / ((5.67e-8) * Aemit))**(1/4)
+
 
     DeltaTmax = Tmax - 288.15
     # DeltaTmin = Tmin - 288.15
@@ -55,11 +56,16 @@ def ThermalCheck(geometry, holes, t, youngsm, yieldvalues, d2, cte):
     Fx = 1427.4 + FdeltaTmax
     Fz = 665.7 + FdeltaTmax
 
+
     Ax2sum = 0
     Az2sum = 0
 
     Finplanemylst = []
     YieldStrength = yieldvalues[geometry[3]]
+
+    nf = len(holes)
+    F_in_plane_x = Fx / nf
+    F_in_plane_z = Fz / nf
 
     for i in holes:
         Asum = Asum + (math.pi) * (holes[holes.index(i)][0])**2
@@ -80,25 +86,21 @@ def ThermalCheck(geometry, holes, t, youngsm, yieldvalues, d2, cte):
         Finplanemysublst.append(Finplane_my_z)
         Finplanemylst.append(Finplanemysublst)
     
-    nf = len(holes)
-    F_in_plane_x = Fx / nf
-    F_in_plane_z = Fz / nf
-
     Pilst = []
     for i in Finplanemylst:
-        Fnetx = F_in_plane_x + Finplanemylst[Finplanemylst.index(i)][0]
-        Fnetz = F_in_plane_z + Finplanemylst[Finplanemylst.index(i)][1]
+        Fnetx = F_in_plane_x + i[0]
+        Fnetz = F_in_plane_z + i[1]
         Pi = math.sqrt((Fnetx**2) + (Fnetz**2))
         Pilst.append(Pi)
     
     sigmalist = []
     for i in Pilst:
-        sigma = Pilst[Pilst.index(i)] / (2 * t * holes[Pilst.index(i)][0])
+        sigma = i / (2 * t * holes[Pilst.index(i)][0])
         sigmalist.append(sigma)
     
     MSlist = []
     for i in sigmalist:
-        MS = (sigmalist[sigmalist.index(i)] / YieldStrength) - 1
+        MS = (YieldStrength / i) - 1
         MSlist.append(MS)
 
     return min(MSlist)
